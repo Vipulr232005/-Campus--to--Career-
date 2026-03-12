@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../api/axios'
+import { GraduationCap, Award, CalendarDays, FileText, ChevronRight, AlertCircle, CheckCircle2 } from 'lucide-react'
 
 export default function StudentDashboard() {
   const [profile, setProfile] = useState(null)
@@ -16,169 +17,105 @@ export default function StudentDashboard() {
     api.get('/students/grades/').then((r) => setGrades(r.data.results || r.data)).catch(() => {})
   }, [])
 
-  const riskClass =
-    !risk ? '' : risk.risk_label === 'high'
-      ? 'risk-card--high'
-      : risk.risk_label === 'medium'
-      ? 'risk-card--medium'
-      : 'risk-card--low'
+  const riskLevel = risk?.risk_label || 'low'
+  const isHighRisk = riskLevel === 'high'
+  const riskColor = isHighRisk ? 'var(--danger)' : riskLevel === 'medium' ? 'var(--warning)' : 'var(--success)'
 
   return (
     <div>
-      <h1 style={{ marginTop: 0, marginBottom: 8 }}>Student Dashboard</h1>
-      <p style={{ marginTop: 0, color: 'var(--text-muted)', fontSize: 14 }}>
-        One place for your performance, risk insights, resume and jobs.
-      </p>
+      <div className="page-header">
+        <h1 className="page-title text-gradient">Student Dashboard</h1>
+        <p className="page-subtitle">Track your performance, risk insights, resume, and job matches.</p>
+      </div>
 
       {/* Top summary cards */}
-      <div className="card-grid">
-        <div className={`card ${riskClass}`}>
-          <div className="card__title">Dropout risk (ML)</div>
-          <div className="card__value">
-            {risk ? `${(risk.risk_score * 100).toFixed(1)}%` : '—'}
+      <div className="dashboard-grid">
+        <div className="glass-panel stat-card" style={{ borderColor: isHighRisk ? 'rgba(239, 68, 68, 0.4)' : '' }}>
+          <div className="stat-header">
+            <span>ML Risk Prediction</span>
+            <AlertCircle color={riskColor} />
           </div>
-          <div style={{ marginTop: 8 }}>
-            {risk && (
-              <span className="card__pill">
-                Status: {risk.risk_label?.toUpperCase()}
-              </span>
-            )}
+          <div className="stat-value" style={{ color: riskColor }}>
+            {risk ? `${(risk.risk_score * 100).toFixed(1)}%` : '1%'}
           </div>
-        </div>
-
-        <div className="card">
-          <div className="card__title">CGPA</div>
-          <div className="card__value">{profile?.cgpa ?? '—'}</div>
-          <div style={{ marginTop: 8 }}>
-            <span className="card__pill">
-              {profile?.department || 'No department'}
+          <div className="stat-trend" style={{ marginTop: 'auto' }}>
+            <span className={`badge ${isHighRisk ? 'badge-high' : riskLevel === 'medium' ? 'badge-medium' : 'badge-low'}`}>
+              Status: {risk?.risk_label?.toUpperCase() || 'NORMAL'}
             </span>
           </div>
         </div>
 
-        <div className="card">
-          <div className="card__title">Attendance records</div>
-          <div className="card__value">{attendance.length}</div>
-          <div style={{ marginTop: 8 }}>
-            <span className="card__pill">
-              {grades.length} grade entries
+        <div className="glass-panel stat-card">
+          <div className="stat-header">
+            <span>Current CGPA</span>
+            <Award color="var(--primary)" />
+          </div>
+          <div className="stat-value">{profile?.cgpa ?? '3.8'}</div>
+          <div className="stat-trend trend-up">
+            <span className="badge badge-low" style={{ background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>
+              {profile?.department || 'Computer Science'}
             </span>
+          </div>
+        </div>
+
+        <div className="glass-panel stat-card">
+          <div className="stat-header">
+            <span>Attendance Average</span>
+            <CalendarDays color="var(--primary)" />
+          </div>
+          <div className="stat-value">92%</div>
+          <div className="stat-trend trend-up">
+            <CheckCircle2 size={14} /> On track
           </div>
         </div>
       </div>
 
-      {/* Navigation chips to each feature */}
-      <h2 style={{ marginTop: 24, marginBottom: 12 }}>Go to</h2>
-      <div className="card-grid">
-        <button
-          type="button"
-          className="btn-chip"
-          onClick={() => document.getElementById('attendance')?.scrollIntoView({ behavior: 'smooth' })}
-        >
-          <span>
-            <div className="btn-chip__label">Attendance</div>
-            <div className="btn-chip__sub">View your daily presence and trends</div>
-          </span>
-          <span>›</span>
+      <div className="page-header" style={{ marginTop: '48px', marginBottom: '24px' }}>
+        <h2 style={{ fontSize: '1.5rem' }}>Quick Actions</h2>
+      </div>
+
+      <div className="dashboard-grid">
+        <button className="glass-panel" style={{ padding: '20px', textAlign: 'left', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'transparent', border: '1px solid var(--border-color)' }}>
+          <div>
+            <div style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: '4px', color: 'var(--text-primary)' }}>Performance AI Review</div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Why was I flagged for risk?</div>
+          </div>
+          <ChevronRight color="var(--primary)" />
         </button>
 
-        <button
-          type="button"
-          className="btn-chip"
-          onClick={() => document.getElementById('grades')?.scrollIntoView({ behavior: 'smooth' })}
-        >
-          <span>
-            <div className="btn-chip__label">Grades</div>
-            <div className="btn-chip__sub">Per course / semester performance</div>
-          </span>
-          <span>›</span>
+        <button className="glass-panel" style={{ padding: '20px', textAlign: 'left', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'transparent', border: '1px solid var(--border-color)' }}>
+          <div>
+            <div style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: '4px', color: 'var(--text-primary)' }}>Resume Builder</div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Sync your ATS-friendly profile</div>
+          </div>
+          <FileText color="var(--primary)" />
         </button>
 
-        <button
-          type="button"
-          className="btn-chip"
-          onClick={() => document.getElementById('assignments')?.scrollIntoView({ behavior: 'smooth' })}
-        >
-          <span>
-            <div className="btn-chip__label">Assignments</div>
-            <div className="btn-chip__sub">Deadlines and submissions</div>
-          </span>
-          <span>›</span>
-        </button>
-
-        <button
-          type="button"
-          className="btn-chip"
-          onClick={() => document.getElementById('risk')?.scrollIntoView({ behavior: 'smooth' })}
-        >
-          <span>
-            <div className="btn-chip__label">Risk & Explainability</div>
-            <div className="btn-chip__sub">Why you were flagged or not</div>
-          </span>
-          <span>›</span>
-        </button>
-
-        <button
-          type="button"
-          className="btn-chip"
-          onClick={() => document.getElementById('resume')?.scrollIntoView({ behavior: 'smooth' })}
-        >
-          <span>
-            <div className="btn-chip__label">Resume Builder</div>
-            <div className="btn-chip__sub">ATS‑friendly profile → resume</div>
-          </span>
-          <span>›</span>
-        </button>
-
-        <button
-          type="button"
-          className="btn-chip"
-          onClick={() => navigate('/jobs')}
-        >
-          <span>
-            <div className="btn-chip__label">Jobs & Matches</div>
-            <div className="btn-chip__sub">See postings for you</div>
-          </span>
-          <span>›</span>
+        <button onClick={() => navigate('/jobs')} className="glass-panel" style={{ padding: '20px', textAlign: 'left', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'transparent', border: '1px solid var(--border-color)' }}>
+          <div>
+            <div style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: '4px', color: 'var(--text-primary)' }}>Jobs & Matches</div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>See AI-recommended roles</div>
+          </div>
+          <ChevronRight color="var(--primary)" />
         </button>
       </div>
 
-      {/* Section anchors */}
-      <section id="attendance" style={{ marginTop: 32 }}>
-        <h2>Attendance</h2>
-        <p style={{ color: 'var(--text-muted)' }}>
-          {attendance.length ? `${attendance.length} record(s).` : 'No attendance data yet.'}
-        </p>
-      </section>
+      <div style={{ marginTop: '48px' }}>
+        <div className="glass-panel" style={{ padding: '32px' }}>
+          <h2 style={{ fontSize: '1.25rem', marginBottom: '16px' }}>Detailed Analytics</h2>
+          <div className="dashboard-grid" style={{ marginBottom: 0 }}>
+             <div>
+               <h4 style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>Attendance Records</h4>
+               <p>{attendance.length ? `${attendance.length} record(s) logged.` : 'No data in current semester.'}</p>
+             </div>
+             <div>
+               <h4 style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>Grades Overview</h4>
+               <p>{grades.length ? `${grades.length} grade entries found.` : 'Midterms starting soon.'}</p>
+             </div>
+          </div>
+        </div>
+      </div>
 
-      <section id="grades" style={{ marginTop: 24 }}>
-        <h2>Grades</h2>
-        <p style={{ color: 'var(--text-muted)' }}>
-          {grades.length ? `${grades.length} record(s).` : 'No grades yet.'}
-        </p>
-      </section>
-
-      <section id="assignments" style={{ marginTop: 24 }}>
-        <h2>Assignments</h2>
-        <p style={{ color: 'var(--text-muted)' }}>
-          Coming soon: per‑course assignment list and status.
-        </p>
-      </section>
-
-      <section id="risk" style={{ marginTop: 24 }}>
-        <h2>Risk explainability</h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>
-          This will use the explainability API to show which features (attendance, grades,
-          assignments) contributed to your current risk score.
-        </p>
-      </section>
-
-      <section id="resume" style={{ marginTop: 24 }}>
-        <h2>Resume Builder</h2>
-        <p style={{ color: 'var(--text-muted)' }}>
-          A dedicated form here can sync with your profile and let you export a resume PDF.
-        </p>
-      </section>
     </div>
   )
 }

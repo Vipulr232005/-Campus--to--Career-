@@ -1,101 +1,92 @@
-import { useState } from 'react'
-import { Outlet, NavLink, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import { LayoutDashboard, Users, GraduationCap, Briefcase, FileSearch, LogOut, Sparkles } from 'lucide-react'
 
 export default function Layout() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
-  const [open, setOpen] = useState(false)
+  const location = useLocation()
 
   const handleLogout = () => {
     logout()
     navigate('/login')
   }
 
-  const go = (to) => {
-    setOpen(false)
-    navigate(to)
-  }
+  const navItems = []
 
-  const goAndScroll = (to, hashId) => {
-    setOpen(false)
-    navigate(to)
-    // allow route to render, then scroll
-    setTimeout(() => {
-      const el = document.getElementById(hashId)
-      if (el) el.scrollIntoView({ behavior: 'smooth' })
-    }, 50)
+  if (user) {
+    if (user.role === 'student') {
+      navItems.push({ name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> })
+      navItems.push({ name: 'My Performance', path: '/dashboard#grades', icon: <GraduationCap size={20} /> })
+    }
+    
+    if (user.role === 'faculty') {
+      navItems.push({ name: 'Early Warning System', path: '/faculty', icon: <Users size={20} /> })
+    }
+
+    if (user.role === 'company') {
+      navItems.push({ name: 'AI Resume Screener', path: '/company', icon: <FileSearch size={20} /> })
+    }
+
+    navItems.push({ name: 'Jobs', path: '/jobs', icon: <Briefcase size={20} /> })
   }
 
   return (
-    <div className="app-shell">
-      <header className="app-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <NavLink to="/" className="app-header__title" style={{ textDecoration: 'none', color: 'inherit' }}>
-            Campus to Career
-          </NavLink>
-        </div>
-        {user && (
-          <>
-            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ fontSize: 13 }}>{user.username} · {user.role}</span>
-              <button
-                type="button"
-                onClick={handleLogout}
-                style={{
-                  padding: '6px 12px',
-                  borderRadius: 999,
-                  border: 'none',
-                  background: 'rgba(255,255,255,0.9)',
-                  cursor: 'pointer',
-                  fontSize: 13,
-                }}
-              >
-                Logout
-              </button>
-              <button
-                type="button"
-                className="hamburger-btn"
-                onClick={() => setOpen((v) => !v)}
-                aria-label="Open navigation"
-              >
-                <span className="hamburger-lines" />
-              </button>
+    <div className="app-layout">
+      {user && (
+        <aside className="sidebar">
+          <div className="logo-container">
+            <Sparkles className="logo-icon" size={28} />
+            <span className="logo-text">NexusAI Core</span>
+          </div>
+
+          <nav className="nav-menu">
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.path || (location.pathname === '/' && item.path === '/dashboard')
+              return (
+                <NavLink
+                  key={item.name}
+                  to={item.path}
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                  onClick={(e) => {
+                    if (item.path.includes('#')) {
+                      e.preventDefault()
+                      navigate(item.path.split('#')[0])
+                      setTimeout(() => {
+                        const el = document.getElementById(item.path.split('#')[1])
+                        if (el) el.scrollIntoView({ behavior: 'smooth' })
+                      }, 50)
+                    }
+                  }}
+                >
+                  {item.icon}
+                  {item.name}
+                </NavLink>
+              )
+            })}
+          </nav>
+
+          <div style={{ marginTop: 'auto' }}>
+            <div className="glass-panel" style={{ padding: '16px', marginBottom: '16px' }}>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>Logged in as</div>
+              <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{user.username}</div>
+              <div className="badge badge-low" style={{ display: 'inline-block', marginTop: '8px', fontSize: '0.65rem' }}>{user.role}</div>
             </div>
-            {open && (
-              <div className="hamburger-menu">
-                {user.role === 'student' && (
-                  <>
-                    <div className="hamburger-menu__groupTitle">Student</div>
-                    <button onClick={() => go('/dashboard')}>Dashboard</button>
-                    <button onClick={() => goAndScroll('/dashboard', 'attendance')}>Attendance</button>
-                    <button onClick={() => goAndScroll('/dashboard', 'grades')}>Grades</button>
-                    <button onClick={() => goAndScroll('/dashboard', 'assignments')}>Assignments</button>
-                    <button onClick={() => goAndScroll('/dashboard', 'risk')}>Risk & Explain</button>
-                    <button onClick={() => goAndScroll('/dashboard', 'resume')}>Resume Builder</button>
-                  </>
-                )}
-                {user.role === 'faculty' && (
-                  <>
-                    <div className="hamburger-menu__groupTitle">Faculty</div>
-                    <button onClick={() => go('/faculty')}>At‑risk students</button>
-                    <button onClick={() => go('/faculty')}>Alerts</button>
-                  </>
-                )}
-                {user.role === 'company' && (
-                  <>
-                    <div className="hamburger-menu__groupTitle">Company</div>
-                    <button onClick={() => go('/company')}>Company portal</button>
-                  </>
-                )}
-                <div className="hamburger-menu__groupTitle">Jobs</div>
-                <button onClick={() => go('/jobs')}>Browse jobs</button>
-              </div>
-            )}
-          </>
-        )}
-      </header>
-      <main className="app-main">
+
+            <button
+              onClick={handleLogout}
+              className="nav-link"
+              style={{ width: '100%', background: 'transparent', cursor: 'pointer', border: '1px solid var(--danger)', color: 'var(--danger)' }}
+            >
+              <LogOut size={20} />
+              Sign Out
+            </button>
+          </div>
+        </aside>
+      )}
+
+      <main className="main-content">
         <Outlet />
       </main>
     </div>
