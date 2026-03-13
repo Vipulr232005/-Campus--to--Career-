@@ -6,6 +6,7 @@ import StudentDashboard from './pages/StudentDashboard'
 import FacultyPanel from './pages/FacultyPanel'
 import CompanyPortal from './pages/CompanyPortal'
 import Jobs from './pages/Jobs'
+import Landing from './pages/Landing'
 import { useAuth } from './hooks/useAuth'
 
 function Protected({ children, allowedRoles }) {
@@ -22,8 +23,8 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<Landing />} />
+        <Route element={<Layout />}>
           <Route path="dashboard" element={
             <Protected allowedRoles={['student']}>
               <StudentDashboard />
