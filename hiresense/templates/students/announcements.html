@@ -1,0 +1,25 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'students:dashboard' %}">🏠 Overview</a>
+  <a href="{% url 'students:attendance' %}">📅 Attendance</a>
+  <a href="{% url 'students:grades' %}">📝 Grades</a>
+  <a href="{% url 'students:risk_score' %}">⚠️ Risk Score</a>
+  <a href="{% url 'students:job_board' %}">💼 Jobs</a>
+  <a href="{% url 'students:announcements' %}" class="active">📢 Announcements</a>
+  <a href="{% url 'accounts:profile' %}">👤 Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="glass-card">
+  <h2>Announcements</h2>
+  {% for a in announcements %}
+  <div style="padding: 1rem 0; border-bottom: 1px solid var(--glass-border);">
+    <strong>{{ a.title }}</strong>
+    <span style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 0.5rem;">{{ a.get_category_display }} · {{ a.created_at|date }}</span>
+    <p style="margin: 0.5rem 0 0;">{{ a.description }}</p>
+    <span style="font-size: 0.85rem;">— {{ a.posted_by.get_full_name|default:a.posted_by.email }}</span>
+  </div>
+  {% empty %}
+  <p>No announcements.</p>
+  {% endfor %}
+</div>
+{% endblock %}

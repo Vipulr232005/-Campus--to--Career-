@@ -1,0 +1,34 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'students:dashboard' %}">🏠 Overview</a>
+  <a href="{% url 'students:attendance' %}" class="active">📅 Attendance</a>
+  <a href="{% url 'students:grades' %}">📝 Grades</a>
+  <a href="{% url 'students:risk_score' %}">⚠️ Risk Score</a>
+  <a href="{% url 'students:job_board' %}">💼 Jobs</a>
+  <a href="{% url 'students:announcements' %}">📢 Announcements</a>
+  <a href="{% url 'accounts:profile' %}">👤 Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="glass-card">
+  <h2>Attendance</h2>
+  <table class="data-table">
+    <thead><tr><th>Subject</th><th>Held</th><th>Attended</th><th>%</th></tr></thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        <td>{{ r.subject }} ({{ r.code }})</td>
+        <td>{{ r.held }}</td>
+        <td>{{ r.attended }}</td>
+        <td class="{% if r.pct >= 75 %}risk-low{% elif r.pct >= 60 %}risk-mid{% else %}risk-high{% endif %}">{{ r.pct }}%</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4">No records.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p style="margin-top: 1rem;">Overall: <strong>{{ overall }}%</strong></p>
+  <div style="height: 12px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; margin-top: 0.5rem;">
+    <div style="height: 100%; width: {{ overall }}%; background: var(--teal);"></div>
+  </div>
+</div>
+{% endblock %}

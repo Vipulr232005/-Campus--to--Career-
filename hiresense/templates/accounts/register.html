@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="section" style="max-width: 520px; margin: 4rem auto;">
+  <div class="glass-card">
+    <h2 style="margin-bottom: 1rem;">Register — HireSense AI</h2>
+    <div class="modal-tabs" style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+      <a href="?role=student" class="btn-sm {% if role == 'student' %}btn-teal{% else %}btn-outline{% endif %}">Student</a>
+      <a href="?role=faculty" class="btn-sm {% if role == 'faculty' %}btn-teal{% else %}btn-outline{% endif %}">Faculty</a>
+      <a href="?role=company" class="btn-sm {% if role == 'company' %}btn-teal{% else %}btn-outline{% endif %}">Company</a>
+    </div>
+    <form method="post" action="{% url 'accounts:register' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      {% if form.errors %}<p class="risk-high">{{ form.errors }}</p>{% endif %}
+      <button type="submit" class="btn-teal" style="width: 100%; margin-top: 1rem;">Register</button>
+    </form>
+    <p style="margin-top: 1rem; font-size: 0.9rem;"><a href="{% url 'accounts:login' %}" style="color: var(--teal);">Login</a></p>
+  </div>
+</div>
+{% endblock %}

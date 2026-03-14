@@ -1,0 +1,37 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'students:dashboard' %}">🏠 Overview</a>
+  <a href="{% url 'students:attendance' %}">📅 Attendance</a>
+  <a href="{% url 'students:grades' %}">📝 Grades</a>
+  <a href="{% url 'students:risk_score' %}">⚠️ Risk Score</a>
+  <a href="{% url 'students:job_board' %}" class="active">💼 Jobs</a>
+  <a href="{% url 'students:announcements' %}">📢 Announcements</a>
+  <a href="{% url 'accounts:profile' %}">👤 Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="glass-card">
+  <h2>Job Board</h2>
+  <form method="get" action="{% url 'students:job_board' %}" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+    <input type="text" name="role" class="form-input" placeholder="Role filter" style="max-width: 200px;" value="{{ request.GET.role }}">
+    <input type="text" name="skills" class="form-input" placeholder="Skills filter" style="max-width: 200px;" value="{{ request.GET.skills }}">
+    <button type="submit" class="btn-teal btn-sm">Filter</button>
+  </form>
+  <div style="display: grid; gap: 1rem;">
+    {% for job in jobs %}
+    <div class="glass-card" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <strong>{{ job.title }}</strong> — {{ job.company.company_name }}<br>
+        <span style="color: var(--text-secondary);">{{ job.skills_required }} · ₹{{ job.salary_min|default:"—" }}-{{ job.salary_max|default:"—" }}</span>
+      </div>
+      {% if job.id in applied_ids %}
+      <span class="btn-outline btn-sm" style="cursor: default;">Applied</span>
+      {% else %}
+      <a href="{% url 'students:apply_job' job.pk %}" class="btn-teal btn-sm">Apply</a>
+      {% endif %}
+    </div>
+    {% empty %}
+    <p>No jobs.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

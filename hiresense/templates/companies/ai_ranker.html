@@ -1,0 +1,36 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'companies:dashboard' %}">Overview</a>
+  <a href="{% url 'companies:post_job' %}">Post Job</a>
+  <a href="{% url 'companies:listings' %}">My Listings</a>
+  <a href="{% url 'companies:applications' %}">Applications</a>
+  <a href="{% url 'companies:ai_ranker' %}" class="active">AI Ranker</a>
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="glass-card">
+  <h2>AI Resume Ranker</h2>
+  <form method="get" style="margin-bottom: 1rem;">
+    <label>Job</label>
+    <select name="job" class="form-input" style="max-width: 300px;">
+      <option value="">Select job</option>
+      {% for j in jobs %}
+      <option value="{{ j.id }}" {% if selected_job and selected_job.id == j.id %}selected{% endif %}>{{ j.title }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn-teal btn-sm">Rank</button>
+  </form>
+  {% if selected_job %}
+  <p>Ranked by AI fit score (keyword match vs JD).</p>
+  {% for a in applications %}
+  <div style="padding: 1rem 0; border-bottom: 1px solid var(--glass-border);">
+    <strong>{{ a.applicant.get_full_name|default:a.applicant.email }}</strong> - Score: {{ a.ai_fit_score }}
+    <div style="font-size: 0.9rem; color: var(--text-secondary);">Matched: {{ a.matched_skills|default:"-" }} | Missing: {{ a.missing_skills|default:"-" }}</div>
+    {% if a.status == 'pending' %}<a href="{% url 'companies:shortlist' a.pk %}" class="btn-teal btn-sm">Shortlist</a>{% endif %}
+  </div>
+  {% empty %}
+  <p>No applications for this job.</p>
+  {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

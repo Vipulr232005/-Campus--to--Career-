@@ -1,0 +1,18 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'faculty:dashboard' %}" class="active">Overview</a>
+  <a href="{% url 'faculty:students_list' %}">My Students</a>
+  <a href="{% url 'faculty:at_risk' %}">At-Risk</a>
+  <a href="{% url 'faculty:post_results' %}">Post Results</a>
+  <a href="{% url 'faculty:post_announcement' %}">Post Announcement</a>
+  <a href="{% url 'faculty:manage_attendance' %}">Attendance</a>
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="stat-grid">
+  <div class="stat-card"><div class="value">{{ total_students }}</div><div class="label">Total Students</div></div>
+  <div class="stat-card"><div class="value risk-high">{{ at_risk_count }}</div><div class="label">At-Risk</div></div>
+  <div class="stat-card"><div class="value">{{ announcements_count }}</div><div class="label">Posted Announcements</div></div>
+  <div class="stat-card"><div class="value">{{ avg_attendance }}%</div><div class="label">Avg Attendance</div></div>
+</div>
+{% endblock %}

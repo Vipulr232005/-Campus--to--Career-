@@ -1,0 +1,33 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'faculty:dashboard' %}">Overview</a>
+  <a href="{% url 'faculty:students_list' %}">My Students</a>
+  <a href="{% url 'faculty:at_risk' %}">At-Risk</a>
+  <a href="{% url 'faculty:post_results' %}" class="active">Post Results</a>
+  <a href="{% url 'faculty:post_announcement' %}">Post Announcement</a>
+  <a href="{% url 'faculty:manage_attendance' %}">Attendance</a>
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="glass-card">
+  <h2>Post Results</h2>
+  <form method="post">
+    {% csrf_token %}
+    <p><label>Subject</label>{{ form.subject }}</p>
+    <p><label>Semester</label>{{ form.semester }}</p>
+    <table class="data-table" style="margin-top: 1rem;">
+      <thead><tr><th>Student</th><th>Internal</th><th>External</th></tr></thead>
+      <tbody>
+        {% for s in students %}
+        <tr>
+          <td>{{ s.user.get_full_name|default:s.user.email }}</td>
+          <td><input type="number" name="internal_{{ s.id }}" class="form-input" step="0.5" min="0" max="100" style="max-width: 100px;"></td>
+          <td><input type="number" name="external_{{ s.id }}" class="form-input" step="0.5" min="0" max="100" style="max-width: 100px;"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit" class="btn-teal" style="margin-top: 1rem;">Save</button>
+  </form>
+</div>
+{% endblock %}

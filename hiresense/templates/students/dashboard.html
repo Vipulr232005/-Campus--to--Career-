@@ -1,0 +1,29 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'students:dashboard' %}" class="active">Overview</a>
+  <a href="{% url 'students:attendance' %}">Attendance</a>
+  <a href="{% url 'students:grades' %}">Grades</a>
+  <a href="{% url 'students:risk_score' %}">Risk Score</a>
+  <a href="{% url 'students:job_board' %}">Jobs</a>
+  <a href="{% url 'students:announcements' %}">Announcements</a>
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="glass-card">
+  <h2>Hello {{ profile.user.get_full_name|default:profile.user.email }}</h2>
+</div>
+<div class="stat-grid">
+  <div class="stat-card"><div class="value">{{ attendance_pct }}%</div><div class="label">Attendance %</div></div>
+  <div class="stat-card"><div class="value">{{ cgpa|default:"-" }}</div><div class="label">CGPA</div></div>
+  <div class="stat-card"><div class="value">{{ risk_score }}</div><div class="label">Risk ({{ risk_label }})</div></div>
+  <div class="stat-card"><div class="value">{{ jobs_applied }}</div><div class="label">Jobs Applied</div></div>
+</div>
+<div class="glass-card">
+  <h3>Recent announcements</h3>
+  {% for a in announcements %}
+  <p style="margin: 0.5rem 0;"><strong>{{ a.title }}</strong> - {{ a.created_at|date }}</p>
+  {% empty %}
+  <p>No announcements.</p>
+  {% endfor %}
+</div>
+{% endblock %}

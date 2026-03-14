@@ -1,0 +1,23 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'students:dashboard' %}">Overview</a>
+  <a href="{% url 'students:attendance' %}">Attendance</a>
+  <a href="{% url 'students:grades' %}">Grades</a>
+  <a href="{% url 'students:risk_score' %}" class="active">Risk Score</a>
+  <a href="{% url 'students:job_board' %}">Jobs</a>
+  <a href="{% url 'students:announcements' %}">Announcements</a>
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="glass-card">
+  <h2>AI Dropout Risk Score</h2>
+  <p style="font-size: 3rem; font-weight: 800;">{{ risk_score }}</p>
+  <p>{{ risk_label }} risk</p>
+  <p style="margin-top: 1rem;">Based on attendance, grades, and assignments.</p>
+</div>
+<div class="stat-grid">
+  <div class="glass-card"><h3>Improve attendance</h3><p>Attend at least 75% of classes.</p></div>
+  <div class="glass-card"><h3>Grades</h3><p>Focus on weak subjects.</p></div>
+  <div class="glass-card"><h3>Stay on track</h3><p>Submit assignments on time.</p></div>
+</div>
+{% endblock %}

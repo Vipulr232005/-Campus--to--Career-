@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="section" style="max-width: 440px; margin: 4rem auto;">
+  <div class="glass-card">
+    <h2 style="margin-bottom: 1rem;">Login — HireSense AI</h2>
+    <form method="post" action="{% url 'accounts:login' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      {% if form.non_field_errors %}<p class="risk-high">{{ form.non_field_errors }}</p>{% endif %}
+      <button type="submit" class="btn-teal" style="width: 100%; margin-top: 1rem;">Login</button>
+    </form>
+    <p style="margin-top: 1rem; font-size: 0.9rem;"><a href="{% url 'accounts:register' %}" style="color: var(--teal);">Register</a> · <a href="{% url 'landing:index' %}" style="color: var(--text-secondary);">Back to home</a></p>
+  </div>
+</div>
+{% endblock %}

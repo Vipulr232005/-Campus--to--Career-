@@ -1,0 +1,21 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'companies:dashboard' %}">Overview</a>
+  <a href="{% url 'companies:post_job' %}">Post Job</a>
+  <a href="{% url 'companies:listings' %}" class="active">My Listings</a>
+  <a href="{% url 'companies:applications' %}">Applications</a>
+  <a href="{% url 'companies:ai_ranker' %}">AI Ranker</a>
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="glass-card">
+  <h2>My Job Listings</h2>
+  {% for job in jobs %}
+  <div style="padding: 1rem 0; border-bottom: 1px solid var(--glass-border);">
+    <strong>{{ job.title }}</strong> - {{ job.applications.count }} applications - {{ job.is_active|yesno:"Active,Closed" }}
+  </div>
+  {% empty %}
+  <p>No jobs yet. <a href="{% url 'companies:post_job' %}">Post a job</a></p>
+  {% endfor %}
+</div>
+{% endblock %}

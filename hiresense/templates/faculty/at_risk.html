@@ -1,0 +1,24 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'faculty:dashboard' %}">Overview</a>
+  <a href="{% url 'faculty:students_list' %}">My Students</a>
+  <a href="{% url 'faculty:at_risk' %}" class="active">At-Risk</a>
+  <a href="{% url 'faculty:post_results' %}">Post Results</a>
+  <a href="{% url 'faculty:post_announcement' %}">Post Announcement</a>
+  <a href="{% url 'faculty:manage_attendance' %}">Attendance</a>
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="glass-card">
+  <h2>At-Risk Students</h2>
+  {% for profile, score in at_risk_list %}
+  <div style="padding: 1rem 0; border-bottom: 1px solid var(--glass-border);">
+    <strong>{{ profile.user.get_full_name|default:profile.user.email }}</strong>
+    <span class="risk-high" style="margin-left: 0.5rem;">Risk: {{ score }}</span>
+    <button type="button" class="btn-teal btn-sm" style="margin-left: 1rem;">Mark Reviewed</button>
+  </div>
+  {% empty %}
+  <p>No at-risk students.</p>
+  {% endfor %}
+</div>
+{% endblock %}

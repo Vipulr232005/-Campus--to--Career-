@@ -1,0 +1,24 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'faculty:dashboard' %}">Overview</a>
+  <a href="{% url 'faculty:students_list' %}">My Students</a>
+  <a href="{% url 'faculty:at_risk' %}">At-Risk</a>
+  <a href="{% url 'faculty:post_results' %}">Post Results</a>
+  <a href="{% url 'faculty:post_announcement' %}">Post Announcement</a>
+  <a href="{% url 'faculty:manage_attendance' %}">Attendance</a>
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="glass-card">
+  <h2>My Announcements</h2>
+  {% for a in announcements %}
+  <div style="padding: 1rem 0; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: flex-start;">
+    <div><strong>{{ a.title }}</strong> - {{ a.created_at|date }}<br><span style="color: var(--text-secondary);">{{ a.description|truncatewords:20 }}</span></div>
+    <form method="post" action="{% url 'faculty:announcement_delete' a.pk %}" style="display: inline;">{% csrf_token %}<button type="submit" class="btn-outline btn-sm">Delete</button></form>
+  </div>
+  {% empty %}
+  <p>No announcements.</p>
+  {% endfor %}
+  <p style="margin-top: 1rem;"><a href="{% url 'faculty:post_announcement' %}" class="btn-teal btn-sm">Post new</a></p>
+</div>
+{% endblock %}

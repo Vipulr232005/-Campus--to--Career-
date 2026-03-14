@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<nav class="navbar">
+  <a href="{% url 'landing:index' %}" class="navbar-logo"><span class="navbar-logo-dot"></span> HireSense AI</a>
+  <button type="button" class="navbar-toggle" aria-label="Menu">☰</button>
+  <ul class="navbar-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="{% url 'accounts:login' %}">Login</a></li>
+  </ul>
+  <a href="{% url 'accounts:register' %}?role=student" class="navbar-cta">Get Started Free</a>
+</nav>
+<section class="hero">
+  <h1 class="hero-title">From Classroom to Career — Powered by AI</h1>
+  <p class="hero-subtext">One platform for students to grow, faculty to guide, and companies to hire — all driven by AI.</p>
+  <div class="hero-buttons">
+    <a href="{% url 'accounts:register' %}?role=student" class="btn-teal">Get Started Free</a>
+    <a href="#how" class="btn-outline">See How It Works</a>
+  </div>
+</section>
+<section id="features" class="section">
+  <h2 class="section-title reveal">Everything in one intelligent platform</h2>
+  <p class="section-subtitle reveal">Smart JD upload, AI resume ranking, explainability, student dashboard, early warning, faculty portal, job board, analytics, privacy.</p>
+  <div class="features-grid">
+    <div class="feature-card reveal"><div class="icon">📄</div><h3>Smart JD Upload</h3><p>Post job descriptions in seconds.</p></div>
+    <div class="feature-card reveal"><div class="icon">🤖</div><h3>AI Resume Ranking</h3><p>ML ranks candidates by fit score.</p></div>
+    <div class="feature-card reveal"><div class="icon">💡</div><h3>Explainable AI</h3><p>Know WHY a candidate was shortlisted.</p></div>
+    <div class="feature-card reveal"><div class="icon">📊</div><h3>Student Dashboard</h3><p>Track attendance, grades, and risk.</p></div>
+    <div class="feature-card reveal"><div class="icon">🔔</div><h3>Early Warning</h3><p>AI flags at-risk students early.</p></div>
+    <div class="feature-card reveal"><div class="icon">🎓</div><h3>Faculty Portal</h3><p>Post results, events, and alerts.</p></div>
+    <div class="feature-card reveal"><div class="icon">💼</div><h3>Job Board</h3><p>Students apply to company openings.</p></div>
+    <div class="feature-card reveal"><div class="icon">📈</div><h3>Analytics</h3><p>Visual insights for every student.</p></div>
+    <div class="feature-card reveal"><div class="icon">🔒</div><h3>Data Privacy</h3><p>GDPR and DPDP compliant.</p></div>
+  </div>
+</section>
+<section id="how" class="section">
+  <h2 class="section-title reveal">One Platform. Three Portals.</h2>
+  <div class="features-grid">
+    <div class="feature-card reveal"><h3>Student</h3><p>Register, view academics, apply to jobs.</p></div>
+    <div class="feature-card reveal"><h3>Faculty</h3><p>Login, manage students, post updates.</p></div>
+    <div class="feature-card reveal"><h3>Company</h3><p>Sign up, post JD, view AI-ranked applicants.</p></div>
+  </div>
+</section>
+<section id="pricing" class="section">
+  <h2 class="section-title reveal">Pricing</h2>
+  <div class="features-grid">
+    <div class="feature-card reveal"><h3>Free</h3><p>Students and faculty — always free.</p><a href="{% url 'accounts:register' %}?role=student" class="btn-outline btn-sm">Get Started</a></div>
+    <div class="feature-card reveal" style="border-color: var(--teal);"><h3>Growth</h3><p>₹999/mo — Small companies, up to 10 jobs.</p><a href="{% url 'accounts:register' %}?role=company" class="btn-teal btn-sm">Start Trial</a></div>
+    <div class="feature-card reveal"><h3>Scale</h3><p>₹2499/mo — Unlimited posts, analytics.</p><a href="{% url 'accounts:register' %}?role=company" class="btn-outline btn-sm">Contact</a></div>
+  </div>
+</section>
+<footer class="footer">
+  <div class="navbar-logo">HireSense AI — From Classroom to Career</div>
+  <div class="footer-links"><a href="#">About</a><a href="#">Contact</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+  <p style="color: var(--text-secondary); font-size: 0.9rem;">Made with love in India</p>
+</footer>
+{% endblock %}

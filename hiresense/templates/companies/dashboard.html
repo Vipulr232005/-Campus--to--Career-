@@ -1,0 +1,17 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'companies:dashboard' %}" class="active">Overview</a>
+  <a href="{% url 'companies:post_job' %}">Post Job</a>
+  <a href="{% url 'companies:listings' %}">Listings</a>
+  <a href="{% url 'companies:applications' %}">Applications</a>
+  <a href="{% url 'companies:ai_ranker' %}">AI Ranker</a>
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="stat-grid">
+  <div class="stat-card"><div class="value">{{ jobs_count }}</div><div class="label">Jobs Posted</div></div>
+  <div class="stat-card"><div class="value">{{ applications_count }}</div><div class="label">Applications</div></div>
+  <div class="stat-card"><div class="value">{{ shortlisted }}</div><div class="label">Shortlisted</div></div>
+  <div class="stat-card"><div class="value">{{ pending }}</div><div class="label">Pending</div></div>
+</div>
+{% endblock %}

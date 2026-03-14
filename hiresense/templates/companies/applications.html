@@ -1,0 +1,48 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'companies:dashboard' %}">Overview</a>
+  <a href="{% url 'companies:post_job' %}">Post Job</a>
+  <a href="{% url 'companies:listings' %}">My Listings</a>
+  <a href="{% url 'companies:applications' %}" class="active">Applications</a>
+  <a href="{% url 'companies:ai_ranker' %}">AI Ranker</a>
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="glass-card">
+  <h2>Applications</h2>
+  <form method="get" style="margin-bottom: 1rem;">
+    <label>Job</label>
+    <select name="job" class="form-input" style="max-width: 300px;">
+      <option value="">Select job</option>
+      {% for j in jobs %}
+      <option value="{{ j.id }}" {% if selected_job and selected_job.id == j.id %}selected{% endif %}>{{ j.title }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn-teal btn-sm">View</button>
+  </form>
+  {% if selected_job %}
+  <table class="data-table">
+    <thead><tr><th>Name</th><th>Email</th><th>Applied</th><th>AI Score</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for a in applications %}
+      <tr>
+        <td>{{ a.applicant.get_full_name|default:a.applicant.email }}</td>
+        <td>{{ a.applicant.email }}</td>
+        <td>{{ a.applied_at|date }}</td>
+        <td>{{ a.ai_fit_score }}</td>
+        <td>{{ a.status }}</td>
+        <td>
+          {% if a.status == 'pending' %}
+          <form method="post" action="{% url 'companies:shortlist' a.pk %}" style="display:inline;">{% csrf_token %}<button type="submit" class="btn-teal btn-sm">Shortlist</button></form>
+          <form method="post" action="{% url 'companies:reject' a.pk %}" style="display:inline;">{% csrf_token %}<button type="submit" class="btn-outline btn-sm">Reject</button></form>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6">No applications.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+{% endblock %}

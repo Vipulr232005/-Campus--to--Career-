@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-wrap">
+  <aside class="dashboard-sidebar">
+    <div style="padding: 1rem 1.25rem; font-family: 'Syne', sans-serif; font-weight: 800;">HireSense AI</div>
+    <a href="{{ request.user.get_dashboard_url }}">← Back to dashboard</a>
+    <a href="{% url 'accounts:logout' %}" style="margin-top: auto;">🚪 Logout</a>
+  </aside>
+  <div class="dashboard-main">
+    <div class="glass-card">
+      <h2>My Profile</h2>
+      <form method="post" enctype="multipart/form-data" action="{% url 'accounts:profile' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-teal">Save</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

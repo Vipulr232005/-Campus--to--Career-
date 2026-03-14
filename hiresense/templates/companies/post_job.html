@@ -1,0 +1,15 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'companies:dashboard' %}">Overview</a>
+  <a href="{% url 'companies:post_job' %}" class="active">Post Job</a>
+  <a href="{% url 'companies:listings' %}">Listings</a>
+  <a href="{% url 'companies:applications' %}">Applications</a>
+  <a href="{% url 'companies:ai_ranker' %}">AI Ranker</a>
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="glass-card">
+  <h2>Post a Job</h2>
+  <form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit" class="btn-teal">Post Job</button></form>
+</div>
+{% endblock %}

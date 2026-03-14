@@ -1,0 +1,21 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'faculty:dashboard' %}">Overview</a>
+  <a href="{% url 'faculty:students_list' %}">My Students</a>
+  <a href="{% url 'faculty:at_risk' %}">At-Risk</a>
+  <a href="{% url 'faculty:post_results' %}">Post Results</a>
+  <a href="{% url 'faculty:post_announcement' %}" class="active">Post Announcement</a>
+  <a href="{% url 'faculty:manage_attendance' %}">Attendance</a>
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="glass-card">
+  <h2>Post Announcement</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn-teal">Post</button>
+  </form>
+  <p style="margin-top: 1rem;"><a href="{% url 'faculty:announcement_list' %}" class="btn-outline btn-sm">View all announcements</a></p>
+</div>
+{% endblock %}

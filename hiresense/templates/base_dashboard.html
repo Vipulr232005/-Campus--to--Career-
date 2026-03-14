@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-wrap">
+  <aside class="dashboard-sidebar" id="dashboardSidebar">
+    <div style="padding: 1rem 1.25rem; font-family: 'Syne', sans-serif; font-weight: 800;">HireSense AI</div>
+    {% block sidebar_links %}{% endblock %}
+    <a href="{% url 'accounts:logout' %}" style="margin-top: auto;">🚪 Logout</a>
+  </aside>
+  <div class="dashboard-main">
+    {% block dashboard_content %}{% endblock %}
+  </div>
+</div>
+<button type="button" class="sidebar-toggle" aria-label="Menu" style="display:none; position: fixed; top: 1rem; left: 1rem; z-index: 101; background: var(--glass-bg); border: 1px solid var(--glass-border); color: white; padding: 0.5rem; border-radius: 8px; cursor: pointer;">☰</button>
+{% endblock %}

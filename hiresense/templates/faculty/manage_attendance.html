@@ -1,0 +1,32 @@
+{% extends "base_dashboard.html" %}
+{% block sidebar_links %}
+  <a href="{% url 'faculty:dashboard' %}">Overview</a>
+  <a href="{% url 'faculty:students_list' %}">My Students</a>
+  <a href="{% url 'faculty:at_risk' %}">At-Risk</a>
+  <a href="{% url 'faculty:post_results' %}">Post Results</a>
+  <a href="{% url 'faculty:post_announcement' %}">Post Announcement</a>
+  <a href="{% url 'faculty:manage_attendance' %}" class="active">Attendance</a>
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+{% endblock %}
+{% block dashboard_content %}
+<div class="glass-card">
+  <h2>Manage Attendance</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <table class="data-table" style="margin-top: 1rem;">
+      <thead><tr><th>Student</th><th>Present</th><th>Absent</th></tr></thead>
+      <tbody>
+        {% for s in students %}
+        <tr>
+          <td>{{ s.user.get_full_name|default:s.user.email }}</td>
+          <td><input type="radio" name="status_{{ s.id }}" value="present"></td>
+          <td><input type="radio" name="status_{{ s.id }}" value="absent"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit" class="btn-teal" style="margin-top: 1rem;">Save</button>
+  </form>
+</div>
+{% endblock %}
